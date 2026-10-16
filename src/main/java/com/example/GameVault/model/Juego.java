@@ -25,4 +25,16 @@ public class Juego {
     //Almacenaremos el nombre del archivo o la URL de la imagen
     @Column(name = "portada_url")
     private String portadaURL;
+
+    @Column
+    private Double precio;
+
+    @Column
+    private String categoria;
+
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
+
+
 }

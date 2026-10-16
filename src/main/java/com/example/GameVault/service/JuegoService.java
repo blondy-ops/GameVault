@@ -18,25 +18,38 @@ public class JuegoService {
 
     @Autowired //crea el objeto
     JuegoRepository juegoRepository;
-
     private static final String UPLOAD_DIR = "src/main/resources/static/uploads/";
 
     public List<Juego> obtenerTodos(){
         return juegoRepository.findAll();
     }
 
-    public void guardarJuego(Juego juego,
-                             MultipartFile portada){
-        String nombreArchivo = "default.png";
+    public void guardarJuego(Juego juego, MultipartFile portada){
+        String urlImage = juego.getPortadaURL() != null ?
+            juego.getPortadaURL() : "default.png";
 
         if(!portada.isEmpty()){
-            nombreArchivo = guardarImagenLocal(portada);
+            urlImage = guardarImagenLocal(portada);
             // Cloudinary
             // Storage de firebase
         }
 
-        juego.setPortadaURL(nombreArchivo);
+        juego.setPortadaURL(urlImage);
         juegoRepository.save(juego);
+    }
+
+
+    //Metodo para buscar un juego en especifico
+    public Juego obtenerJuegoPorId(Long id){
+        return juegoRepository.findById(id).orElse(null);
+    }
+    //Metodo para eliminar un juego
+    public void eliminarJuego(Long id){
+        juegoRepository.deleteById(id);
+    }
+
+    public List<Juego> obtenerJuegosPorUsuario(Long usuarioID){
+        return juegoRepository.findByUsuarioId(usuarioID);
     }
 
     public String guardarImagenLocal(MultipartFile portada){
